@@ -222,6 +222,48 @@ Ejemplo de automatización con MCP:
 - **Seguridad**: Control granular de permisos
 - **Eficiencia**: Comunicación optimizada
 
+## Ejemplo práctico: Deployment en Kubernetes 🚢
+
+Como parte de este curso, se ha implementado un ejemplo práctico de deployment en Kubernetes utilizando el MCP de Kubernetes:
+
+### Recursos creados:
+
+#### 1. **Namespace**: `mcp-curso-dev`
+- Namespace dedicado para el entorno de desarrollo del curso MCP
+
+#### 2. **Deployment**: `mcp-curso-app`
+- **Imagen**: nginx:1.21
+- **Réplicas**: 3 pods
+- **Recursos**:
+  - CPU: 250m (request) - 500m (limit)
+  - Memoria: 64Mi (request) - 128Mi (limit)
+
+#### 3. **Service**: `mcp-curso-service`
+- **Tipo**: NodePort
+- **Puerto interno**: 80
+- **Puerto externo**: 30080
+- **Cluster IP**: 10.104.252.163
+
+### Acceso al servicio:
+```bash
+# Obtener IP de Minikube
+minikube ip
+
+# Verificar endpoint (ejemplo con IP 192.168.49.2)
+curl -I http://192.168.49.2:30080
+```
+
+### Archivos de configuración:
+Los manifiestos de Kubernetes están disponibles en:
+- `/k8s-manifests/namespace.yaml`
+- `/k8s-manifests/deployment.yaml`
+- `/k8s-manifests/service.yaml`
+
+### Estado verificado:
+✅ **HTTP/1.1 200 OK** - Servicio funcionando correctamente
+✅ **3/3 réplicas** - Todas las réplicas ejecutándose
+✅ **Nginx 1.21.6** - Servidor web respondiendo
+
 ## Recursos adicionales 📚
 
 - [Documentación oficial de MCP](https://docs.anthropic.com/mcp)
@@ -252,6 +294,10 @@ Si encuentras errores o tienes sugerencias para mejorar el curso:
 ├── mcp.json                     # Configuración de MCP servers
 ├── s3-bucket.tf                 # Ejemplo de infraestructura Terraform
 ├── terraform.tfvars.example     # Variables de ejemplo
+├── k8s-manifests/              # Manifiestos de Kubernetes
+│   ├── namespace.yaml          # Namespace mcp-curso-dev
+│   ├── deployment.yaml         # Deployment con nginx
+│   └── service.yaml            # Service NodePort
 ├── 🌟_Tesoros_de_Colombia_🌟/   # Datos de ejemplo para filesystem server
 │   ├── Barranquilla/
 │   ├── Bogota/
