@@ -1,0 +1,11 @@
+# Ejemplo de archivo de variables para Terraform
+# Copia este archivo como terraform.tfvars y modifica los valores según tus necesidades
+
+# Región de AWS
+aws_region = "us-east-1"
+
+# Nombre base del bucket (se añadirá sufijo aleatorio para unicidad)
+bucket_name = "mi-bucket-publico-s3"
+
+# Ambiente
+environment = "dev"
