@@ -24,6 +24,14 @@
         "MYSQL_PASSWORD": "mcpcurso",
         "MYSQL_DATABASE": "libreria_cf"
       }
+    },
+
+    "climaColombia": {
+      "command": "node",
+      "args": ["/home/ney/IA/mcpClima/index.js"],
+      "env": {
+        "OPENWEATHER_API_KEY": "e189791e25217c29bec584e9471f82b8"
+      }
     }
 
     }

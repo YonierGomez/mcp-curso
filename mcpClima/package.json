@@ -1,0 +1,21 @@
+{
+  "name": "mcp-clima-colombia",
+  "version": "1.0.0",
+  "description": "MCP Server para consultar el clima de ciudades de Colombia usando OpenWeatherMap API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": ["mcp", "clima", "colombia", "weather", "openweathermap"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "axios": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
