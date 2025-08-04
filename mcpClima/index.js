@@ -10,10 +10,18 @@ import {
   GetPromptRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import axios from "axios";
+import { request, Agent } from 'undici';
 
-const API_KEY = process.env.OPENWEATHER_API_KEY;
+const API_KEY = process.env.OPENWEATHER_API_KEY || "e189791e25217c29bec584e9471f82b8";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
+
+// Configurar agente con IPv4 preferido
+const agent = new Agent({
+  connect: {
+    family: 4, // Forzar IPv4
+    timeout: 10000
+  }
+});
 
 // Ciudades principales de Colombia con sus coordenadas
 const COLOMBIA_CITIES = {
@@ -46,6 +54,74 @@ class ClimaColombiaServer {
     );
 
     this.setupHandlers();
+  }
+
+  // Helper function to make HTTP requests using undici with robust configuration
+  async makeApiRequest(url) {
+    try {
+      const { statusCode, body } = await request(url, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'MCP-ClimaServer/1.0',
+          'Accept': 'application/json',
+          'Accept-Encoding': 'gzip'
+        },
+        dispatcher: agent,
+        timeout: 15000
+      });
+
+      if (statusCode >= 200 && statusCode < 300) {
+        const data = await body.json();
+        return data;
+      } else {
+        const errorText = await body.text();
+        throw new Error(`HTTP ${statusCode}: ${errorText}`);
+      }
+    } catch (error) {
+      console.error(`🔍 Error en makeApiRequest: ${error.code || 'UNKNOWN'} - ${error.message}`);
+      
+      // Solo hacer fallback si es un error de conexión específico
+      if (error.code === 'ETIMEDOUT' || 
+          error.code === 'UND_ERR_CONNECT_TIMEOUT' || 
+          error.code === 'ECONNREFUSED' ||
+          error.code === 'ENOTFOUND') {
+        console.error('⚠️ Error de conexión, intentando fallback a curl...');
+        return await this.makeApiRequestWithCurl(url);
+      } else if (error.code === 'UND_ERR_SOCKET') {
+        throw new Error('Error de conexión de red');
+      } else if (error.message) {
+        throw new Error(`Fallo en la petición: ${error.message}`);
+      } else {
+        throw new Error(`Fallo en la petición: ${JSON.stringify(error)}`);
+      }
+    }
+  }
+
+  // Fallback method using curl when undici fails
+  async makeApiRequestWithCurl(url) {
+    try {
+      const { execSync } = await import('child_process');
+      const command = `curl -s -4 --max-time 10 "${url}" -H "User-Agent: MCP-ClimaServer/1.0" -H "Accept: application/json"`;
+      console.error(`🔧 Ejecutando fallback: ${command.substring(0, 100)}...`);
+      const result = execSync(command, { encoding: 'utf8', timeout: 12000 });
+      
+      if (!result || result.trim() === '') {
+        throw new Error('Respuesta vacía del servidor');
+      }
+      
+      const data = JSON.parse(result);
+      
+      if (data.cod && data.cod !== 200) {
+        throw new Error(`API Error: ${data.message || 'Error desconocido'}`);
+      }
+      
+      return data;
+    } catch (error) {
+      if (error.message.includes('JSON.parse')) {
+        throw new Error('Respuesta no válida del servidor API');
+      }
+      throw new Error(`Fallback curl falló: ${error.message}`);
+    }
   }
 
   setupHandlers() {
@@ -108,18 +184,23 @@ class ClimaColombiaServer {
     // Ejecución de herramientas
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       if (!API_KEY) {
-        throw new Error("API Key de OpenWeatherMap no configurada. Configure OPENWEATHER_API_KEY en las variables de entorno.");
+        throw new Error("API Key de OpenWeatherMap no configurada. Configure OPENWEATHER_API_KEY en las variables de entorno o se usará la clave por defecto.");
       }
 
-      switch (request.params.name) {
-        case "get_weather":
-          return await this.getCurrentWeather(request.params.arguments.city);
-        case "get_forecast":
-          return await this.getForecast(request.params.arguments.city);
-        case "get_multiple_cities_weather":
-          return await this.getMultipleCitiesWeather(request.params.arguments.cities);
-        default:
-          throw new Error(`Herramienta desconocida: ${request.params.name}`);
+      try {
+        switch (request.params.name) {
+          case "get_weather":
+            return await this.getCurrentWeather(request.params.arguments.city);
+          case "get_forecast":
+            return await this.getForecast(request.params.arguments.city);
+          case "get_multiple_cities_weather":
+            return await this.getMultipleCitiesWeather(request.params.arguments.cities);
+          default:
+            throw new Error(`Herramienta desconocida: ${request.params.name}`);
+        }
+      } catch (error) {
+        console.error(`❌ Error en herramienta ${request.params.name}:`, error.message);
+        throw error;
       }
     });
 
@@ -258,17 +339,8 @@ Cada región tiene características climáticas particulares debido a su ubicaci
         throw new Error(`Ciudad no encontrada: ${cityKey}`);
       }
 
-      const response = await axios.get(`${BASE_URL}/weather`, {
-        params: {
-          lat: city.lat,
-          lon: city.lon,
-          appid: API_KEY,
-          units: 'metric',
-          lang: 'es'
-        }
-      });
-
-      const data = response.data;
+      const url = `${BASE_URL}/weather?lat=${city.lat}&lon=${city.lon}&appid=${API_KEY}&units=metric&lang=es`;
+      const data = await this.makeApiRequest(url);
       
       return {
         content: [
@@ -315,17 +387,8 @@ Cada región tiene características climáticas particulares debido a su ubicaci
         throw new Error(`Ciudad no encontrada: ${cityKey}`);
       }
 
-      const response = await axios.get(`${BASE_URL}/forecast`, {
-        params: {
-          lat: city.lat,
-          lon: city.lon,
-          appid: API_KEY,
-          units: 'metric',
-          lang: 'es'
-        }
-      });
-
-      const data = response.data;
+      const url = `${BASE_URL}/forecast?lat=${city.lat}&lon=${city.lon}&appid=${API_KEY}&units=metric&lang=es`;
+      const data = await this.makeApiRequest(url);
       let forecast = `🔮 Pronóstico de 5 días para ${city.name}, Colombia:\n\n`;
 
       const dailyForecasts = {};
@@ -371,19 +434,12 @@ Cada región tiene características climáticas particulares debido a su ubicaci
         }
 
         try {
-          const response = await axios.get(`${BASE_URL}/weather`, {
-            params: {
-              lat: city.lat,
-              lon: city.lon,
-              appid: API_KEY,
-              units: 'metric',
-              lang: 'es'
-            }
-          });
+          const url = `${BASE_URL}/weather?lat=${city.lat}&lon=${city.lon}&appid=${API_KEY}&units=metric&lang=es`;
+          const data = await this.makeApiRequest(url);
 
           return {
             city: city.name,
-            data: response.data
+            data: data
           };
         } catch (error) {
           return { city: city.name, error: error.message };

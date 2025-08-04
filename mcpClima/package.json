@@ -6,16 +6,23 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch index.js"
+    "test": "node test.js",
+    "test:practical": "node test-practical.js"
   },
-  "keywords": ["mcp", "clima", "colombia", "weather", "openweathermap"],
-  "author": "Your Name",
+  "keywords": [
+    "mcp",
+    "clima",
+    "colombia",
+    "weather",
+    "openweathermap"
+  ],
+  "author": "Yonier Asprilla",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.4.0",
-    "axios": "^1.6.0"
+    "@modelcontextprotocol/sdk": "^1.17.1",
+    "undici": "^7.13.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }

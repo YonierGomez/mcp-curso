@@ -1,5 +1,18 @@
 {
     "servers": {
+      "git": {
+        "command": "uvx",
+        "args": ["mcp-server-git"]
+      },
+
+
+    "kubernetes": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "kubernetes-mcp-server@latest"
+      ]
+    },
       "filesystem": {
         "command": "npx",
         "args": [
