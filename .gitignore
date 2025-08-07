@@ -1,52 +1,234 @@
 # Proyecto IA - MCP Course
 # Archivo .gitignore principal
 
-# Node.js dependencies
+# ============================================
+# NODE.JS / TYPESCRIPT
+# ============================================
+# Dependencies
 **/node_modules/
 **/package-lock.json
-**/*.log
+**/yarn.lock
+**/.pnp.*
+**/.yarn/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/lerna-debug.log*
 
+# Build outputs
+**/dist/
+**/build/
+**/coverage/
+**/.next/
+**/.nuxt/
+**/.cache/
+**/.parcel-cache/
+**/out/
+
+# TypeScript
+**/*.tsbuildinfo
+**/.eslintcache
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
 # Environment variables
 **/.env
 **/.env.local
+**/.env.development
+**/.env.test
 **/.env.production
+**/.env.staging
+**/config.local.json
+**/secrets.json
 
-# IDE files
-.vscode/settings.json
-.idea/
-**/*.swp
-**/*.swo
+# ============================================
+# KUBERNETES & CONTAINERIZATION
+# ============================================
+# Kubernetes secrets and sensitive configs
+**/k8s-manifests/*-secret.yaml
+**/k8s-manifests/secrets/
+**/helm-values-*.yaml
+!**/helm-values-example.yaml
 
-# OS generated files
-.DS_Store
-**/.DS_Store
-**/Thumbs.db
+# Docker
+**/docker-compose.override.yml
+**/.dockerignore
 
+# ============================================
+# TERRAFORM & INFRASTRUCTURE
+# ============================================
 # Terraform files
 **/*.tfstate
 **/*.tfstate.*
 **/.terraform/
 **/.terraform.lock.hcl
+**/terraform.tfvars
+!**/terraform.tfvars.example
+**/crash.log
+**/crash.*.log
+**/*.tfplan
+**/*.tfplan.*
 
+# ============================================
+# DATABASE & DATA
+# ============================================
 # Database files
 **/db/data/
+**/db/mysql-data/
+**/db/postgres-data/
 **/db/*.sql.bak
+**/db/*.dump
+**/db/backups/
+**/database.sqlite
+**/database.sqlite3
+**/*.db
 
+# ============================================
+# DEVELOPMENT & TESTING
+# ============================================
 # Temporary files
 **/tmp/
 **/temp/
 **/test-*.js
 !**/test.js
 !**/test-practical.js
-
-# Build outputs
-**/dist/
-**/build/
-**/coverage/
+**/test-output/
+**/test-results/
 
 # Logs
 **/logs/
+**/*.log
 **/*.log.*
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
 
-# Docker volumes
-**/db/mysql-data/
+# Runtime files
+**/*.pid
+**/*.seed
+**/*.pid.lock
+
+# Coverage directories
+**/coverage/
+**/.nyc_output/
+**/junit.xml
+
+# ============================================
+# IDE & EDITORS
+# ============================================
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/.ropeproject
+
+# IntelliJ IDEA
+.idea/
+**/*.iml
+**/*.iws
+
+# Vim/Neovim
+**/*.swp
+**/*.swo
+**/*.swn
+**/Session.vim
+**/.netrwhist
+
+# Emacs
+**/*~
+**/#*#
+**/.#*
+
+# Sublime Text
+**/*.sublime-workspace
+**/*.sublime-project
+
+# ============================================
+# OPERATING SYSTEMS
+# ============================================
+# macOS
+.DS_Store
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+**/Icon?
+**/.DocumentRevisions-V100
+**/.fseventsd
+**/.Spotlight-V100
+**/.TemporaryItems
+**/.Trashes
+**/.VolumeIcon.icns
+**/.com.apple.timemachine.donotpresent
+
+# Windows
+**/Thumbs.db
+**/Thumbs.db:encryptable
+**/ehthumbs.db
+**/ehthumbs_vista.db
+**/*.stackdump
+**/[Dd]esktop.ini
+**/$RECYCLE.BIN/
+**/*.cab
+**/*.msi
+**/*.msix
+**/*.msm
+**/*.msp
+**/*.lnk
+
+# Linux
+**/*~
+**/.fuse_hidden*
+**/.directory
+**/.Trash-*
+**/.nfs*
+
+# ============================================
+# CLOUD & SERVICES
+# ============================================
+# AWS
+**/.aws/
+**/aws-exports.js
+
+# Azure
+**/.azure/
+
+# Google Cloud
+**/gcloud/
+
+# ============================================
+# SECURITY & CERTIFICATES
+# ============================================
+# SSL certificates
+**/*.pem
+**/*.key
+**/*.crt
+**/*.cert
+**/*.p12
+**/*.pfx
+
+# SSH keys
+**/id_rsa
+**/id_ed25519
+**/*.ssh/
+
+# ============================================
+# MISCELLANEOUS
+# ============================================
+# Backup files
+**/*.backup
+**/*.bak
+**/*.orig
+**/*.tmp
+
+# Archive files (when not part of project)
+**/*.zip
+**/*.tar
+**/*.tar.gz
+**/*.rar
+**/*.7z
+
+# Lock files for specific tools
+**/.yarn-integrity
+**/Pipfile.lock
+**/poetry.lock
