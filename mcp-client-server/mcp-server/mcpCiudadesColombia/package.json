@@ -1,0 +1,42 @@
+{
+  "name": "mcp-ciudades-colombia",
+  "version": "2.0.0",
+  "description": "MCP Server para gestión completa de información turística, clima, eventos y recomendaciones de las principales ciudades de Colombia",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js",
+    "test:practical": "node test-practical.js",
+    "test:cities": "node test-cities.js"
+  },
+  "keywords": [
+    "mcp",
+    "colombia",
+    "turismo",
+    "ciudades",
+    "clima",
+    "atracciones",
+    "rutas",
+    "eventos",
+    "viajes"
+  ],
+  "author": "Yonier Asprilla",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "node-fetch": "^3.3.2",
+    "undici": "^7.13.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YonierGomez/mcp-curso.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YonierGomez/mcp-curso/issues"
+  },
+  "homepage": "https://github.com/YonierGomez/mcp-curso#readme"
+}

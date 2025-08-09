@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ciudades-colombia": {
+      "command": "node",
+      "args": ["/ruta/completa/al/proyecto/mcp-client-server/mcp-server/mcpCiudadesColombia/index.js"],
+      "env": {
+        "OPENWEATHER_API_KEY": "tu_api_key_de_openweathermap_aqui"
+      }
+    }
+  }
+}

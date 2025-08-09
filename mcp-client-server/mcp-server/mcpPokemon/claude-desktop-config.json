@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "pokemon": {
+      "command": "python",
+      "args": ["/home/ney/IA/mcp-client-server/mcp-server/mcpPokemon/index.py"],
+      "env": {}
+    }
+  }
+}

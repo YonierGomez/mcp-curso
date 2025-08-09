@@ -1,0 +1,29 @@
+{
+  "name": "mcp-tmdb-server",
+  "version": "1.0.0",
+  "description": "MCP Server para The Movie Database (TMDB) API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js",
+    "test-practical": "node test-practical.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "undici": "^6.20.1",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.0"
+  },
+  "keywords": [
+    "mcp",
+    "tmdb",
+    "movies",
+    "tv-shows",
+    "api"
+  ],
+  "author": "Tu nombre",
+  "license": "MIT"
+}

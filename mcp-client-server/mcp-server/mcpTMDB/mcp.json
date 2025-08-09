@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tmdb": {
+      "command": "node",
+      "args": ["/home/ney/IA/mcp-client-server/mcp-server/mcpTMDB/index.js"],
+      "env": {
+        "TMDB_API_KEY": "tu_api_key_de_tmdb_aqui"
+      }
+    }
+  }
+}
